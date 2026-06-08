@@ -188,7 +188,7 @@ const SB='https://vraxnskpfiqzbwxonyde.supabase.co';
 const SK='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZyYXhuc2twZmlxemJ3eG9ueWRlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA2OTgwNjcsImV4cCI6MjA5NjI3NDA2N30.JTR2R36d44FIf9eYrctCzoudp3eI3tRFuCAtYn5jm5A';
 const H={'apikey':SK,'Authorization':'Bearer '+SK,'Content-Type':'application/json','Prefer':'return=representation'};
 const HD={'apikey':SK,'Authorization':'Bearer '+SK};
-let items=[],notas=[],activeTag='all',activeSt='all',editingId=null,editingNoteId=null,selTags=[],selColor='y';
+let items=[],notas=[],activeTag="all",activeSt="all",editingId=null,editingNoteId=null,selTags=[],pickedColor="y";
 async function fetchAll(){
   const[r1,r2]=await Promise.all([fetch(SB+'/rest/v1/pieces?order=created_at.desc',{headers:H}),fetch(SB+'/rest/v1/notes?order=created_at.desc',{headers:H})]);
   items=await r1.json();notas=await r2.json();render();renderPiz();
@@ -232,13 +232,13 @@ function renderPiz(){
   const saved=localStorage.getItem('ff_author');
   if(saved)document.getElementById('naut').value=saved;
 }
-function selColor(c){selColor=c;document.querySelectorAll('.cdot').forEach(d=>d.classList.remove('active'));document.querySelector('[data-c="'+c+'"]').classList.add('active');}
+function selColor(c){pickedColor=c;document.querySelectorAll('.cdot').forEach(d=>d.classList.remove('active'));document.querySelector('[data-c="'+c+'"]').classList.add('active');}
 async function saveNota(){
   const author=document.getElementById('naut').value.trim()||'anónimo';
   const content=document.getElementById('ncont').value.trim();
   if(!content)return;
   localStorage.setItem('ff_author',author);
-  const r=await fetch(SB+'/rest/v1/notes',{method:'POST',headers:H,body:JSON.stringify({author,content,color:selColor})});
+  const r=await fetch(SB+'/rest/v1/notes',{method:'POST',headers:H,body:JSON.stringify({author,content,color:pickedColor})});
   const res=await r.json();
   if(Array.isArray(res)&&res[0])notas.unshift(res[0]);
   renderPiz();
